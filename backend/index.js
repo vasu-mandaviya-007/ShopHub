@@ -25,11 +25,15 @@ import UpdatePass from "./controllers/UpdatePass.js";
 const app = express();
 const port = process.env.PORT || 3001;
 
+const allowedOrigins = process.env.CLIENT_URL
+    ? process.env.CLIENT_URL.split(',')
+    : [];
+
 // ===================================> MIDDLEWARES <=================================== //
 app.use(
     cors({
         // Production me hamesha .env variables use karna best hota he
-        origin: [process.env.CLIENT_URL],
+        origin: allowedOrigins,
         methods: ["POST", "GET", "PUT", "DELETE"], // Added standard methods for future use
         credentials: true,
     })
