@@ -467,7 +467,7 @@ const ShopContextProvider = ({ children }) => {
      /* ── Fetch user profile ── */
      const getUserProfile = useCallback(async () => {
           try {
-               const res = await fetch(api_paths.profile ?? "http://localhost:3001/account/profile", {
+               const res = await fetch(api_paths.profile, {
                     headers: authHeaders(),
                });
                const data = await res.json();

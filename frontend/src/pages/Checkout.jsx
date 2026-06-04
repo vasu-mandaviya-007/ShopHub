@@ -609,6 +609,7 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext.jsx';
+import { api_paths } from '../config/apis.js';
 
 const SHIPPING_THRESHOLD = 999;
 
@@ -968,7 +969,7 @@ const Checkout = () => {
                 },
             };
 
-            const res = await fetch('http://localhost:3001/orders/place', {
+            const res = await fetch(api_paths.placeOrder, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

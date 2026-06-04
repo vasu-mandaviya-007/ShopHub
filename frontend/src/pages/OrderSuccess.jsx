@@ -217,6 +217,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { localpath } from '../config/apis';
 
 const OrderSuccess = () => {
     const navigate = useNavigate();
@@ -232,7 +233,7 @@ const OrderSuccess = () => {
         const token = localStorage.getItem('auth-token');
         if (!token) { navigate('/login'); return; }
 
-        fetch(`http://localhost:3001/orders/${orderId}`, {
+        fetch(`${localpath}orders/${orderId}`, {
             headers: { 'auth-token': token },
         })
             .then(r => r.json())

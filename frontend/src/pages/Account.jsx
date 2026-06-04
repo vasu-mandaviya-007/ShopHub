@@ -1093,8 +1093,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 import Swal from 'sweetalert2';
+import { api_paths, localpath } from '../config/apis';
 
-const API = 'http://localhost:3001';
+const API = localpath;
 
 const authHeaders = () => ({
     'Content-Type': 'application/json',
@@ -1396,7 +1397,7 @@ const ProfileTab = ({ user, onUserUpdate }) => {
         if (!name.trim()) { flash('Name cannot be empty.', 'error'); return; }
         setSaving(true);
         try {
-            const res = await fetch(`${API}/account/update`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ name, phone }) });
+            const res = await fetch(api_paths.accountUpdate, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ name, phone }) });
             const data = await res.json();
             if (data.success) {
                 onUserUpdate(data.user);
@@ -1415,7 +1416,7 @@ const ProfileTab = ({ user, onUserUpdate }) => {
         if (newPwd.length < 6) { flash('Min. 6 characters.', 'error', setPwdToast); return; }
         setPwdSaving(true);
         try {
-            const res = await fetch(`${API}/account/changepassword`, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ currentPassword: curPwd, newPassword: newPwd }) });
+            const res = await fetch(api_paths.changePassword, { method: 'POST', headers: authHeaders(), body: JSON.stringify({ currentPassword: curPwd, newPassword: newPwd }) });
             const data = await res.json();
             if (data.success) {
                 flash('Password changed successfully!', 'success', setPwdToast);
