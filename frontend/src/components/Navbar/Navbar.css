@@ -1,0 +1,167 @@
+.navbar {
+     display: flex;
+     justify-content: space-around;
+     align-items: center;
+     padding: 10px 15px;
+     box-shadow: 0 1px 3px -2px black;
+     position: relative;
+     /* Added for mobile menu positioning */
+     background-color: white;
+}
+
+.nav-logo {
+     height: 60px;
+}
+
+.nav-logo img {
+     height: 100%;
+}
+
+.nav-menu {
+     display: flex;
+     align-items: center;
+     list-style: none;
+     gap: 30px;
+     color: #626262;
+     font-size: 15px;
+     font-weight: 500;
+}
+
+.nav-menu li {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     gap: 3px;
+     font-size: 16px;
+     font-weight: 400;
+     color: #171717;
+     cursor: pointer;
+}
+
+.nav-menu hr {
+     border: none;
+     width: 80%;
+     height: 3px;
+     border-radius: 10px;
+     background-color: #FF4141;
+}
+
+.nav-login-cart {
+     display: flex;
+     align-items: center;
+     gap: 25px;
+}
+
+.nav-login-cart button {
+     width: 120px;
+     height: 45px;
+     outline: none;
+     border: 1px solid #7a7a7a;
+     border-radius: 75px;
+     font-size: 14px;
+     font-weight: 500;
+     background-color: white;
+     cursor: pointer;
+     transition: all .3s ease-in-out;
+}
+
+.nav-login-cart button:hover {
+     background: #59b7ff;
+     color: white;
+     border: none;
+}
+
+.nav-login-cart button:active {
+     background-color: #f3f3f3;
+}
+
+.nav-login-cart .cart-box {
+     position: relative;
+}
+
+.nav-login-cart .cart-icon {
+     font-size: 25px;
+     color: #171717;
+}
+
+.nav-cart-count {
+     position: absolute;
+     width: 15px;
+     height: 15px;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     top: -8px;
+     right: -10px;
+     font-size: 12px;
+     border-radius: 11px;
+     color: white;
+     background: red;
+}
+
+/* --- Mobile Menu Toggle Icon --- */
+.nav-mobile-toggle {
+     display: none;
+     font-size: 24px;
+     cursor: pointer;
+     color: #171717;
+}
+
+/* --- Responsive Media Queries --- */
+@media (max-width: 900px) {
+     .navbar {
+          justify-content: space-between;
+          padding: 10px 30px;
+     }
+
+     .nav-mobile-toggle {
+          display: block;
+          /* Show hamburger icon on mobile */
+          order: 3;
+          /* Push toggle to the right */
+     }
+
+     .nav-login-cart {
+          order: 2;
+          /* Keep cart in the middle on mobile */
+          gap: 15px;
+     }
+
+     .nav-login-cart button {
+          width: 90px;
+          height: 35px;
+          font-size: 13px;
+     }
+
+     /* Hide default menu */
+     .nav-menu {
+          display: none;
+     }
+
+     /* Show mobile menu when 'active' class is added */
+     .nav-menu.active {
+          display: flex;
+          flex-direction: column;
+          position: absolute;
+          top: 80px;
+          /* Just below the navbar */
+          left: 0;
+          width: 100%;
+          background-color: white;
+          padding: 20px 0;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          z-index: 100;
+          gap: 20px;
+     }
+}
+
+@media (max-width: 500px) {
+     .navbar {
+          padding: 10px 15px;
+     }
+
+     .nav-logo {
+          height: 45px;
+     }
+}

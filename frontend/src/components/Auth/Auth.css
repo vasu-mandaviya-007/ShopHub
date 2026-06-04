@@ -1,0 +1,313 @@
+.auth-container {
+     width: 100%;
+     background: #00a4d6;
+     padding: 30px 0;
+     min-height: 560px;
+}
+
+.child-auth-container {
+     width: 470px;
+     background: white;
+     margin: auto;
+     padding: 20px 60px 60px 50px;
+}
+
+.child-auth-container h1 {
+     margin: 20px 0;
+     font-size: 30px;
+     text-align: center;
+}
+
+.auth-container .input-container {
+     display: flex;
+     flex-direction: column;
+     gap: 25px;
+     margin-top: 30px;
+}
+
+.auth-container .input-box {
+     position: relative;
+     width: 100%;
+     margin-bottom: 8px;
+}
+
+.auth-container .field {
+     position: relative;
+     height: 50px;
+     width: 100%;
+     margin-top: 20px;
+     border-radius: 6px;
+}
+
+.auth-container .input-field {
+     height: 50px;
+     width: 100%;
+     /* border-radius: 5px; */
+     padding-left: 25px;
+     outline: none;
+     border: 1px solid #c9c9c9;
+     color: #555;   
+     font-size: 14px;
+}
+
+.auth-container .input-field:-webkit-autofill {
+     -webkit-box-shadow: 0 0 0 1000px white inset;
+     /*Set to your input's background color*/
+     box-shadow: 0 0 0 1000px white inset;
+     -webkit-text-fill-color: #5c5c5c;
+     /* Ensure the text color remains legible */
+}
+
+
+.auth-container input[type="text"]:focus,
+.auth-container input[type="email"]:focus,
+.auth-container input[type="password"]:focus,
+.auth-container input[type="text"]:not(:placeholder-shown),
+.auth-container input[type="email"]:not(:placeholder-shown),
+.auth-container input[type="password"]:not(:placeholder-shown) {
+     outline: 2px solid #028aec;
+}
+
+
+.floating-label {
+     position: absolute;
+     left: 20px;
+     top: 50%;
+     translate: 0 -50%;
+     padding: 0 4px;
+     font-size: 15px;
+     color: #5c5c5c;
+     background-color: white;
+     transition: .3s ease-in-out;
+     cursor: text;
+}
+
+input:focus+.floating-label,
+input:not(:placeholder-shown)+.floating-label {
+     top: -1px;
+     left: 17px;
+     font-size: 13px;
+     color: #028aec;
+}
+
+.success-icon {
+     position: absolute;
+     display: none;
+     right: 20px;
+     font-size: 25px;
+     top: 50%;
+     translate: 0 -50%;
+}
+
+.error {
+     display: none;
+     /* display: flex; */
+     color: red;
+     align-items: center;
+     position: absolute;
+     top: 100%;
+     font-size: 14px;
+     gap: 5px;
+     margin-left: 5px;
+}
+
+.error i {
+     margin-top: 4px;
+     font-size: 15px;
+}
+
+.auth-container button {
+     width: 100%;
+     height: 50px;
+     color: white;
+     /* background: #1068f6; */
+     background-color: #0171d3;
+     margin-top: 20px;
+     border: none;
+     font-size: 17px;
+     font-weight: 600;
+     cursor: pointer;
+}
+
+.auth-container button:hover {
+     background-color: #016dcb;
+}
+
+
+.eye-icon {
+     position: absolute;
+     top: 50%;
+     right: 12px;
+     transform: translateY(-50%);
+     font-size: 18px;
+     color: #8b8b8b;
+     cursor: pointer;
+     padding: 5px;
+}
+
+.form-link {
+     text-align: center;
+     margin-top: 10px;
+}
+
+.form-link p {
+     font-size: 14px;
+     font-weight: 500;
+     color: #232836;
+}
+
+.form-link span {
+     color: #0171d3;
+     text-decoration: none;
+     cursor: pointer;
+}
+
+.form-link span:hover {
+     text-decoration: underline;
+}
+
+.forget-pass-link {
+     margin-top: 20px;
+     text-align: right;
+}
+
+.line {
+     position: relative;
+     height: 1px;
+     width: 100%;
+     margin: 36px 0;
+     background-color: #d4d4d4;
+}
+
+.line::before {
+     content: 'Or';
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+     background-color: #FFF;
+     color: #8b8b8b;
+     padding: 0 15px;
+}
+
+.media-options a {
+     display: flex;
+     position: relative;
+     align-items: center;
+     justify-content: center;
+}
+
+a.facebook {
+     color: #fff;
+     background-color: #4267b2;
+}
+
+a.facebook .facebook-icon {
+     height: 28px;
+     width: 28px;
+     font-size: 23px;
+     border-radius: 50%;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+}
+
+.facebook-icon,
+img.google-img {
+     position: absolute;
+     top: 50%;
+     left: 15px;
+     transform: translateY(-50%);
+}
+
+img.google-img {
+     height: 20px;
+     width: 20px;
+     object-fit: cover;
+}
+
+a.google {
+     border: 1px solid #CACACA;
+}
+
+a.google span {
+     font-weight: 500;
+     opacity: 0.6;
+     color: #232836;
+}
+
+@media screen and (max-width: 400px) {
+     .form {
+          padding: 20px 10px;
+     }
+
+}
+
+
+
+/*  OTP CSS */
+
+.otp-container {
+     display: flex;
+     margin : 15px 0 ;
+     /* border: 1px solid black; */
+     justify-content: space-between;
+}
+
+.auth-container .header-text{
+     display: flex;
+     flex-direction: column;
+     gap: 10px;
+     text-align: center;
+     color: #777;
+     font-size: 15px;
+}
+
+/* .otp-verification-page div{
+     text-align: center;
+     color: #777;
+     font-size: 15px;
+} */
+
+.auth-container .header-text .text-line2 span{
+     color: #016dcb;
+     font-weight: 500;
+}
+
+.otp-container input {
+     min-width: 43px;
+     min-height: 43px;
+     border: none;
+     outline: 2px solid #808080;
+     border-radius: 3px;
+}
+
+.otp-container input:focus {
+     outline: 2px solid #00a4d6;
+}
+
+.resend-otp-timer {
+     display: flex;
+     justify-content: right;
+     gap: 5px;
+     margin-top: 25px;
+     margin-bottom: 15px;
+     text-align: left;
+     color: #016dcb;
+     font-weight: 500;
+}
+
+.resend-otp-timer span:hover{
+     text-decoration: none;
+}
+
+#recaptcha-container{
+     position: absolute;
+     right: 0;
+     height: 360px;
+     width: 360px;
+     z-index: 1111;
+}
+
+
+

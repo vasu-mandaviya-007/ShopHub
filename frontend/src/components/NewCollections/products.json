@@ -1,0 +1,74 @@
+[
+  {
+    "_id": "674cb16e53b52ceffa06f299",
+    "id": 1,
+    "name": "Wireless Earbuds",
+    "imgUrl": "https://rukminim2.flixcart.com/image/612/612/xif0q/night-suit/l/3/j/l-s36-night-dress-for-women-night-suits-for-ladies-pyjama-set-original-imah3kfwystdzsfz.jpeg?q=70",
+    "newPrice": 49.99,
+    "oldPrice": 59.99,
+    "__v": 0
+  },
+  {
+    "_id": "674cb16e53b52ceffa06f29a",
+    "id": 2,
+    "name": "Smart Watch",
+    "imgUrl": "https://rukminim2.flixcart.com/image/612/612/xif0q/track-suit/7/c/8/l-co-zara-dtr-fashion-original-imah46msmn7hmzgx.jpeg?q=70",
+    "newPrice": 99.99,
+    "oldPrice": 129.99,
+    "__v": 0
+  },
+  {
+    "_id": "674cb16e53b52ceffa06f29b",
+    "id": 3,
+    "name": "Laptop Backpack",
+    "imgUrl": "https://rukminim2.flixcart.com/image/612/612/krayqa80/t-shirt/5/d/l/xxl-dsw0909-dsws-original-imag54d5f62svjxr.jpeg?q=70",
+    "newPrice": 39.99,
+    "oldPrice": 49.99,
+    "__v": 0
+  },
+  {
+    "_id": "674cb16e53b52ceffa06f29c",
+    "id": 4,
+    "name": "Bluetooth Speaker",
+    "imgUrl": "https://rukminim2.flixcart.com/image/612/612/xif0q/track-suit/6/x/c/xxl-r4-db-astin-dtr-fashion-original-imagz273mhmwdnbv.jpeg?q=70",
+    "newPrice": 29.99,
+    "oldPrice": 39.99,
+    "__v": 0
+  },
+  {
+    "_id": "674cb16e53b52ceffa06f299",
+    "id": 1,
+    "name": "Wireless Earbuds",
+    "imgUrl": "https://rukminim2.flixcart.com/image/612/612/xif0q/night-suit/l/3/j/l-s36-night-dress-for-women-night-suits-for-ladies-pyjama-set-original-imah3kfwystdzsfz.jpeg?q=70",
+    "newPrice": 49.99,
+    "oldPrice": 59.99,
+    "__v": 0
+  },
+  {
+    "_id": "674cb16e53b52ceffa06f29a",
+    "id": 2,
+    "name": "Smart Watch",
+    "imgUrl": "https://rukminim2.flixcart.com/image/612/612/xif0q/track-suit/7/c/8/l-co-zara-dtr-fashion-original-imah46msmn7hmzgx.jpeg?q=70",
+    "newPrice": 99.99,
+    "oldPrice": 129.99,
+    "__v": 0
+  },
+  {
+    "_id": "674cb16e53b52ceffa06f29b",
+    "id": 3,
+    "name": "Laptop Backpack",
+    "imgUrl": "https://rukminim2.flixcart.com/image/612/612/krayqa80/t-shirt/5/d/l/xxl-dsw0909-dsws-original-imag54d5f62svjxr.jpeg?q=70",
+    "newPrice": 39.99,
+    "oldPrice": 49.99,
+    "__v": 0
+  },
+  {
+    "_id": "674cb16e53b52ceffa06f29c",
+    "id": 4,
+    "name": "Bluetooth Speaker",
+    "imgUrl": "https://rukminim2.flixcart.com/image/612/612/xif0q/track-suit/6/x/c/xxl-r4-db-astin-dtr-fashion-original-imagz273mhmwdnbv.jpeg?q=70",
+    "newPrice": 29.99,
+    "oldPrice": 39.99,
+    "__v": 0
+  }
+]

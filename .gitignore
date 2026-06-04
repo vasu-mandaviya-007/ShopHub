@@ -1,0 +1,17 @@
+# Dependencies (Sabse heavy folder)
+node_modules/
+
+# Security (API keys aur passwords)
+.env
+
+# Production Builds
+build/
+dist/
+
+# System & Editor files
+.DS_Store
+.vscode/
+
+
+
+1.html

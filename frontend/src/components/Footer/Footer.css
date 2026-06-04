@@ -1,0 +1,117 @@
+.footer{
+     display: flex;
+     flex-direction: column;
+     justify-content: center;
+     align-items: center;
+     gap: 40px;
+}
+
+.footer-logo{
+     height: 100px;
+}
+
+.footer-logo img{
+     height: 100%;
+}
+
+
+.footer-links{
+     display: flex;
+     list-style: none;
+     gap: 50px;
+     color: #252525;
+     font-size: 17px;
+}
+
+.footer-links li{
+     cursor: pointer;
+}
+
+
+.footer-copyright{
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     gap: 20px;
+     width: 100%;
+     margin-bottom: 25px;
+     color: #1a1a1a;
+     font-size: 18px;
+}
+
+.footer-copyright hr{
+     width: 80%;
+     border: none;
+     border-radius: 10px;
+     height: 3px;
+     background-color: #c7c7c7;
+}
+
+
+
+/* SOCILA MEDIA ICON CSS */
+
+.socials-container {
+     display: flex;
+     gap: 20px;
+}
+
+.socials-container a{
+     /* background-color: white; */
+     background-color: var(--accent-color);
+     border-radius: 50%;
+     height: 50px;
+     width: 50px;
+     box-sizing: border-box;
+     flex-shrink: 0;
+     display: grid;
+     fill: white;
+     place-items: center;
+     box-shadow: 0 5px 10px rgba(0, 0, 0, .05);
+}
+
+.socials-container a svg{
+     height: 25px;
+}
+
+.socials-container a::before{
+     content: attr(data-social);    
+     position: absolute;
+     background-color: var(--accent-color);
+     color: white;
+     text-decoration: none;
+     padding: .5em 1em;
+     border-radius: 100px;
+     box-shadow: 0 5px 10px rgba(0, 0, 0, .05);
+     translate: 0 -30px;
+     rotate: 25deg;
+     opacity: 0;
+     transition: 200ms cubic-bezier(.42,0,.44,1.68);
+}
+
+
+.socials-container a::after{
+     content: '';
+     position: absolute;
+     height: 0;
+     width: 0;
+     border-left: 8px solid transparent;
+     border-right: 8px solid transparent;
+     border-top: 10px solid var(--accent-color);
+     translate: 0 0 ;
+     rotate: 25deg;
+     opacity: 0;
+     transition: 200ms cubic-bezier(.42,0,.44,1.68);
+}
+
+.socials-container a:hover::before{
+     opacity: 1;
+     translate: 0 -58px;
+     rotate: 0deg;
+}
+
+.socials-container a:hover::after{
+     opacity: 1;
+     translate: 0 -35px;
+     rotate: 0deg;
+}

@@ -1,0 +1,134 @@
+/* ── OTP Input Wrapper ───────────────────────────── */
+.otp-input-wrapper {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     gap: 10px;
+     width: 100%;
+}
+
+/* ── Individual OTP Cell ─────────────────────────── */
+.otp-cell {
+     position: relative;
+     width: clamp(40px, 12vw, 50px);
+     height: clamp(48px, 14vw, 50px);
+     flex-shrink: 0;
+}
+
+.otp-cell input {
+     width: 100%;
+     height: 100%;
+     border: 2px solid #e4e4e7;
+     border-radius: 14px;
+     background: #fafafa;
+     color: #555;
+     font-size: clamp(18px, 5vw, 20px);
+     font-weight: 600;
+     text-align: center;
+     outline: none;
+     caret-color: transparent;
+     transition: border-color 0.2s ease, background 0.2s ease,
+          box-shadow 0.2s ease, transform 0.15s ease;
+     /* remove browser number spinners */
+     appearance: textfield;
+     -moz-appearance: textfield;
+}
+
+.otp-cell input::-webkit-outer-spin-button,
+.otp-cell input::-webkit-inner-spin-button {
+     -webkit-appearance: none;
+     margin: 0;
+}
+
+/* Filled state — soft amber tint */
+.otp-cell input.filled {
+     border-color: #00d3f3;
+     background: #f1fcff;
+     box-shadow: 0 0 0 4px rgba(63, 229, 244, 0.12);
+     /* transform: translateY(-2px) scale(1.05); */
+}
+/* .otp-cell input.filled {
+     border-color: #f59e0b;
+     background: #fffbeb;
+     box-shadow: 0 2px 10px rgba(245, 158, 11, 0.18);
+} */
+
+/* Focus state */
+.otp-cell input:focus {
+     border-color: #00d3f3;
+     background: #f1fcff;
+     box-shadow: 0 0 0 4px rgba(63, 157, 244, 0.12);
+     transform: translateY(-2px) scale(1.05);
+}
+
+/* Animated bottom bar */
+/* .otp-cell::after {
+     content: '';
+     position: absolute;
+     bottom: 5px;
+     left: 50%;
+     transform: translateX(-50%) scaleX(0);
+     width: 60%;
+     height: 3px;
+     border-radius: 99px;
+     background: linear-gradient(90deg, #f43f5e, #fb923c);
+     transition: transform 0.2s ease;
+     pointer-events: none;
+} */
+
+.otp-cell:has(input:focus)::after,
+.otp-cell:has(input.filled)::after {
+     transform: translateX(-50%) scaleX(1);
+}
+
+/* Shake animation on error */
+@keyframes otp-shake {
+
+     0%,
+     100% {
+          transform: translateX(0);
+     }
+
+     20% {
+          transform: translateX(-6px);
+     }
+
+     40% {
+          transform: translateX(6px);
+     }
+
+     60% {
+          transform: translateX(-4px);
+     }
+
+     80% {
+          transform: translateX(4px);
+     }
+}
+
+.otp-input-wrapper.shake .otp-cell input {
+     animation: otp-shake 0.4s ease;
+     border-color: #f43f5e;
+     background: #fff1f2;
+}
+
+/* Separator dot between groups of 3 */
+.otp-separator {
+     width: 6px;
+     height: 6px;
+     border-radius: 50%;
+     background: #d4d4d8;
+     flex-shrink: 0;
+     margin: 0 2px;
+}
+
+/* ── Responsive tweaks ───────────────────────────── */
+@media (max-width: 360px) {
+     .otp-input-wrapper {
+          gap: 6px;
+     }
+
+     .otp-separator {
+          display: none;
+     }
+}
