@@ -217,7 +217,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { localpath } from '../config/apis';
 
 const OrderSuccess = () => {
     const navigate = useNavigate();
@@ -233,7 +232,7 @@ const OrderSuccess = () => {
         const token = localStorage.getItem('auth-token');
         if (!token) { navigate('/login'); return; }
 
-        fetch(`${localpath}orders/${orderId}`, {
+        fetch(`${import.meta.env.VITE_API_URL}orders/${orderId}`, {
             headers: { 'auth-token': token },
         })
             .then(r => r.json())

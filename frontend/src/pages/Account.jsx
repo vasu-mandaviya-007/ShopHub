@@ -1093,9 +1093,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 import Swal from 'sweetalert2';
-import { api_paths, localpath } from '../config/apis';
-
-const API = localpath;
+import api_paths from '../config/apis';
 
 const authHeaders = () => ({
     'Content-Type': 'application/json',
@@ -1603,7 +1601,7 @@ const OrdersTab = () => {
     const [filter, setFilter] = useState('all');
 
     useEffect(() => {
-        fetch(`${API}/orders/myorders`, { headers: authHeaders() })
+        fetch(api_paths.myOrders, { headers: authHeaders() })
             .then(r => r.json())
             .then(data => data.success ? setOrders(data.orders) : setError(data.error || 'Failed to load.'))
             .catch(() => setError('Network error.'))

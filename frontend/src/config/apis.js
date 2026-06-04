@@ -20,9 +20,10 @@ const api_paths = {
      getcartitem: `${localpath}/cart/getcartitem`,
      profile: `${localpath}/account/profile`,
      placeOrder : `${localpath}/orders/place`,
+     myOrders : `${localpath}/orders/myorders`,
      accountUpdate : `${localpath}/account/update`,
      changePassword : `${localpath}/account/changepassword`,
 
 }
 
-export { api_paths, localpath };
+export default api_paths;

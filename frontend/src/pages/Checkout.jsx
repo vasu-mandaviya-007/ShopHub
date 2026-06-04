@@ -609,7 +609,7 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext.jsx';
-import { api_paths } from '../config/apis.js';
+import api_paths from '../config/apis.js';
 
 const SHIPPING_THRESHOLD = 999;
 
