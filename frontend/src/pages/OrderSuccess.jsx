@@ -232,7 +232,7 @@ const OrderSuccess = () => {
         const token = localStorage.getItem('auth-token');
         if (!token) { navigate('/login'); return; }
 
-        fetch(`${import.meta.env.VITE_API_URL}orders/${orderId}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/orders/${orderId}`, {
             headers: { 'auth-token': token },
         })
             .then(r => r.json())
