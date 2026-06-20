@@ -43,11 +43,16 @@ const OrderSchema = new mongoose.Schema({
         discount: { type: Number, default: 0 }, // e.g. 0.10 for 10%
         shippingFee: { type: Number, required: true },
         total: { type: Number, required: true },
+    }, 
+    payment_status: {
+        type: String,
+        enum: ['Paid', 'Unpaid', 'Refunded'],
+        default: 'Unpaid',
     },
     status: {
         type: String,
-        enum: ['placed', 'confirmed', 'shipped', 'delivered', 'cancelled'],
-        default: 'placed',
+        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled', 'Returned'],
+        default: 'Pending',
     },
     placedAt: {
         type: Date,

@@ -1,5 +1,5 @@
 import React from 'react';
-import './AddProduct.css';
+// import './AddProduct.css';
 import upload_area from '../../image/upload_area.png';
 import SelectBox from '../SelectBox/SelectBox';
 import { useState } from 'react';
@@ -42,7 +42,6 @@ const AddProduct = () => {
 
           if (responseData.success) {
                product.image = responseData.image_url;
-               console.log(product);
 
                // Send This product to /addproduct
                await fetch(api_paths.add_product, {

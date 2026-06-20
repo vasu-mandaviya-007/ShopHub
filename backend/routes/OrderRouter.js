@@ -35,12 +35,36 @@
 
 
 import express from 'express';
-import { placeOrder, getUserOrders, getSingleOrder } from '../controllers/OrderController.js';
+import { placeOrder, getUserOrders, getSingleOrder, getAllOrders, updateOrder, deleteOrder, addDummyOrder, getOrder } from '../controllers/OrderController.js';
 import fetchuser from '../middleware/fetchuser.js'; // Clean and centralized
+import Order from '../models/Order.js';
+import mongoose from 'mongoose';
+import fetchAdmin from '../middleware/fetchAdmin.js';
+import readOnlyGuard from '../middleware/readOnlyGuard.js';
 
 const router = express.Router();
 
-// ── Routes ────────────────────────────────────────────────────────────────────
+// ── Admin Routes ────────────────────────────────────────────────────────────────────
+
+
+
+// ── 1. GET ALL ORDERS ──
+router.get('/allorders',fetchAdmin, getAllOrders);
+
+// ── 2. UPDATE ORDER STATUS & PAYMENT ──
+router.put('/update/:id',fetchAdmin, readOnlyGuard, updateOrder);
+
+// ── 3. DELETE ORDER ──
+router.delete('/delete/:id',fetchAdmin, readOnlyGuard, deleteOrder);
+
+// ── (Optional) CREATE DUMMY ORDER FOR TESTING ──
+router.post('/add-dummy',fetchAdmin, readOnlyGuard, addDummyOrder);
+
+
+
+
+// ── Client Routes ────────────────────────────────────────────────────────────────────
+
 
 // Place a new order  →  POST /orders/place
 router.post('/place', fetchuser, placeOrder);
@@ -50,5 +74,8 @@ router.get('/myorders', fetchuser, getUserOrders);
 
 // Get single order by orderId  →  GET /orders/:orderId
 router.get('/:orderId', fetchuser, getSingleOrder);
+
+// router.get('/:id', getOrder);
+
 
 export default router;

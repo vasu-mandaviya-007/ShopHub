@@ -6,12 +6,13 @@ node_modules/
 
 # Production Builds
 build/
-dist/
+dist/ 
 
 # System & Editor files
 .DS_Store
 .vscode/
 
 
+admin/
 
 1.html

@@ -1093,7 +1093,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 import Swal from 'sweetalert2';
-import api_paths from '../config/apis';
+import api_paths from '../config/apis'; 
 
 const authHeaders = () => ({
     'Content-Type': 'application/json',
@@ -1106,16 +1106,23 @@ const addDays = (d, n) => { const r = new Date(d); r.setDate(r.getDate() + n); r
 
 /* ── Status helpers ── */
 const STATUS_STYLES = {
-    placed: 'bg-blue-50    text-blue-600    border-blue-100',
-    confirmed: 'bg-cyan-50    text-cyan-600    border-cyan-100',
-    shipped: 'bg-amber-50   text-amber-600   border-amber-100',
-    delivered: 'bg-emerald-50 text-emerald-600 border-emerald-100',
-    cancelled: 'bg-rose-50    text-rose-500    border-rose-100',
+    Pending: 'bg-blue-50 text-blue-600 border-blue-100',
+    Processing: 'bg-cyan-50 text-cyan-600 border-cyan-100',
+    Shipped: 'bg-amber-50 text-amber-600 border-amber-100',
+    Delivered: 'bg-emerald-50 text-emerald-600 border-emerald-100',
+    Cancelled: 'bg-rose-50 text-rose-500 border-rose-100',
+    Returned: 'bg-purple-50 text-purple-600 border-purple-100', // Naya status
 };
+
 const STATUS_ICONS = {
-    placed: 'fa-receipt', confirmed: 'fa-circle-check',
-    shipped: 'fa-truck-fast', delivered: 'fa-box-open', cancelled: 'fa-ban',
+    Pending: 'fa-receipt',
+    Processing: 'fa-circle-check',
+    Shipped: 'fa-truck-fast',
+    Delivered: 'fa-box-open',
+    Cancelled: 'fa-ban',
+    Returned: 'fa-arrow-rotate-left', // Naya icon (FontAwesome)
 };
+
 const StatusBadge = ({ status }) => (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide border ${STATUS_STYLES[status] ?? STATUS_STYLES.placed}`}>
         <i className={`fa-solid ${STATUS_ICONS[status] ?? 'fa-receipt'} text-[10px]`} />
@@ -1476,6 +1483,7 @@ const ProfileTab = ({ user, onUserUpdate }) => {
                 </div>
 
                 <div className="p-6">
+                    
                     <InlineToast msg={toast.msg} type={toast.type} />
 
                     {isEditingProfile ? (
@@ -1604,11 +1612,11 @@ const OrdersTab = () => {
         fetch(api_paths.myOrders, { headers: authHeaders() })
             .then(r => r.json())
             .then(data => data.success ? setOrders(data.orders) : setError(data.error || 'Failed to load.'))
-            .catch(() => setError('Network error.'))
+            .catch((err) => {setError('Network error.'),console.log(err)})
             .finally(() => setLoading(false));
     }, []);
 
-    const STATUS_FILTERS = ['all', 'placed', 'confirmed', 'shipped', 'delivered', 'cancelled'];
+    const STATUS_FILTERS = ['all', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
     const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
 
     if (loading) return (
@@ -1822,7 +1830,7 @@ const Account = () => {
     );
 };
 
-export default Account;
+export default Account; 
 
 
 

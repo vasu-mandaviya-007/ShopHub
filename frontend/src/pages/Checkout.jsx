@@ -611,6 +611,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext.jsx';
 import api_paths from '../config/apis.js';
 
+
 const SHIPPING_THRESHOLD = 999;
 
 // ── Step bar ──────────────────────────────────────────────────────────────────
@@ -663,6 +664,7 @@ const Input = ({ className = '', ...props }) => (
         className={`px-4 py-3 rounded-xl border border-zinc-200 text-sm text-zinc-800 outline-none
       focus:border-zinc-400 focus:ring-2 focus:ring-zinc-100 transition-all placeholder-zinc-300 ${className}`}
         {...props}
+        autoComplete='on'
     />
 );
 
@@ -671,33 +673,33 @@ const ShippingForm = ({ data, onChange, errors }) => (
     <div className="flex flex-col gap-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <Field label="First Name" error={errors.firstName}>
-                <Input placeholder="Ravi" value={data.firstName} onChange={e => onChange('firstName', e.target.value)} />
+                <Input placeholder="Ravi" value={data.firstName} name={"first_name"} onChange={e => onChange('firstName', e.target.value)} />
             </Field>
             <Field label="Last Name" error={errors.lastName}>
-                <Input placeholder="Sharma" value={data.lastName} onChange={e => onChange('lastName', e.target.value)} />
+                <Input placeholder="Sharma" value={data.lastName} name={"last_name"} onChange={e => onChange('lastName', e.target.value)} />
             </Field>
         </div>
         <Field label="Email Address" error={errors.email}>
-            <Input type="email" placeholder="ravi@email.com" value={data.email} onChange={e => onChange('email', e.target.value)} />
+            <Input type="email" placeholder="ravi@email.com" value={data.email} name={"email"} onChange={e => onChange('email', e.target.value)} />
         </Field>
         <Field label="Phone Number" error={errors.phone}>
-            <Input type="tel" placeholder="+91 98765 43210" value={data.phone} onChange={e => onChange('phone', e.target.value)} />
+            <Input type="tel" placeholder="+91 98765 43210" value={data.phone} name={"phone"} onChange={e => onChange('phone', e.target.value)} />
         </Field>
         <Field label="Address Line 1" error={errors.address1}>
-            <Input placeholder="House / Flat No., Street" value={data.address1} onChange={e => onChange('address1', e.target.value)} />
+            <Input placeholder="House / Flat No., Street" value={data.address1} name={"address_line1"} onChange={e => onChange('address1', e.target.value)} />
         </Field>
         <Field label="Address Line 2 (Optional)">
-            <Input placeholder="Area, Landmark" value={data.address2} onChange={e => onChange('address2', e.target.value)} />
+            <Input placeholder="Area, Landmark" value={data.address2} name={"address_line2"} onChange={e => onChange('address2', e.target.value)} />
         </Field>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             <Field label="City" error={errors.city}>
-                <Input placeholder="Mumbai" value={data.city} onChange={e => onChange('city', e.target.value)} />
+                <Input placeholder="Mumbai" value={data.city} name={"city"} onChange={e => onChange('city', e.target.value)} />
             </Field>
             <Field label="State" error={errors.state}>
-                <Input placeholder="Maharashtra" value={data.state} onChange={e => onChange('state', e.target.value)} />
+                <Input placeholder="Maharashtra" value={data.state} name={"state"} onChange={e => onChange('state', e.target.value)} />
             </Field>
             <Field label="PIN Code" error={errors.pin}>
-                <Input placeholder="400001" value={data.pin} onChange={e => onChange('pin', e.target.value)} maxLength={6} />
+                <Input placeholder="400001" value={data.pin} name={"pincode"} onChange={e => onChange('pin', e.target.value)} maxLength={6} />
             </Field>
         </div>
     </div>
@@ -778,7 +780,7 @@ const PaymentForm = ({ data, onChange, errors }) => (
 );
 
 // ── Step 3: Review ────────────────────────────────────────────────────────────
-const ReviewStep = ({ shipping, payment, cartEntries, subtotal, shippingFee, discountAmt, total, promoCode, discount }) => (
+const ReviewStep = ({ shipping, payment, cartEntries, subtotal, shippingFee, discountAmt, total, promoCode,taxAmount, taxRate, discount }) => (
     <div className="flex flex-col gap-6">
         {/* Items */}
         <div className="rounded-2xl border border-zinc-100 overflow-hidden">
@@ -832,6 +834,13 @@ const ReviewStep = ({ shipping, payment, cartEntries, subtotal, shippingFee, dis
                     <span>−₹{discountAmt.toLocaleString('en-IN')}</span>
                 </div>
             )}
+            {/* ReviewStep ke price breakdown me ye add kar do */}
+            {taxAmount > 0 && (
+                <div className="flex justify-between text-zinc-500">
+                    <span>Tax ({taxRate}%)</span>
+                    <span>₹{taxAmount.toLocaleString('en-IN')}</span>
+                </div>
+            )}
             <div className="flex justify-between text-zinc-500">
                 <span>Shipping</span>
                 <span className={shippingFee === 0 ? 'text-emerald-600' : ''}>
@@ -876,7 +885,12 @@ const validatePayment = (d) => {
 // ── Main Checkout ─────────────────────────────────────────────────────────────
 const Checkout = () => {
     const navigate = useNavigate();
-    const { all_product, cartItem, setCartItem } = useContext(ShopContext);
+
+    const { all_product, cartItem, setCartItem, storeSettings } = useContext(ShopContext);
+
+    // Dynamic Variables
+    const shippingThreshold = Number(storeSettings?.freeShipAmt) || 999;
+    const taxRate = Number(storeSettings?.taxRate) || 0;
 
     const [step, setStep] = useState(0);
     const [shippingErrors, setShippingErrors] = useState({});
@@ -885,8 +899,8 @@ const Checkout = () => {
     const [apiError, setApiError] = useState('');
 
     const [shipping, setShipping] = useState({
-        firstName: '', lastName: '', email: '', phone: '',
-        address1: '', address2: '', city: '', state: '', pin: '',
+        firstName: 'demo', lastName: 'demo', email: 'demo@gmail.com', phone: '1234567890',
+        address1: 'demo', address2: 'demo', city: 'junagadh', state: 'gujarat', pin: '123456',
     });
 
     const [payment, setPayment] = useState({
@@ -901,16 +915,31 @@ const Checkout = () => {
         })
         .filter(Boolean);
 
-    const subtotal = cartEntries.reduce((s, { product, cartItem: ci }) => s + product.new_price * ci.quantity, 0);
-    const totalItems = cartEntries.reduce((s, { cartItem: ci }) => s + ci.quantity, 0);
-    const shippingFee = subtotal >= SHIPPING_THRESHOLD ? 0 : 99;
+    // const subtotal = cartEntries.reduce((s, { product, cartItem: ci }) => s + product.new_price * ci.quantity, 0);
+    // const totalItems = cartEntries.reduce((s, { cartItem: ci }) => s + ci.quantity, 0);
+    // const shippingFee = subtotal >= SHIPPING_THRESHOLD ? 0 : 99;
 
-    // Read promo from sessionStorage (set by Cart page)
+    // // Read promo from sessionStorage (set by Cart page)
+    // const savedPromo = (() => { try { return JSON.parse(sessionStorage.getItem('shopPromo') || 'null'); } catch { return null; } })();
+    // const discount = savedPromo?.discount ?? 0;
+    // const promoCode = savedPromo?.code ?? '';
+    // const discountAmt = Math.floor(subtotal * discount);
+    // const total = subtotal - discountAmt + shippingFee;
+
+    // Calculations
+    const subtotal = cartEntries.reduce((s, { product, cartItem: ci }) => s + product.new_price * ci.quantity, 0);
+
+    // Discount wahi rahega jo session storage me hai
     const savedPromo = (() => { try { return JSON.parse(sessionStorage.getItem('shopPromo') || 'null'); } catch { return null; } })();
     const discount = savedPromo?.discount ?? 0;
     const promoCode = savedPromo?.code ?? '';
     const discountAmt = Math.floor(subtotal * discount);
-    const total = subtotal - discountAmt + shippingFee;
+    const discountedSubtotal = subtotal - discountAmt;
+
+    // Dynamic Tax aur Shipping
+    const taxAmount = Math.floor((discountedSubtotal * taxRate) / 100);
+    const shippingFee = discountedSubtotal >= shippingThreshold ? 0 : 99; // Ya standard fee
+    const total = discountedSubtotal + taxAmount + shippingFee;
 
     const updateShipping = (k, v) => { setShipping(p => ({ ...p, [k]: v })); setShippingErrors(e => ({ ...e, [k]: '' })); };
     const updatePayment = (k, v) => { setPayment(p => ({ ...p, [k]: v })); setPaymentErrors(e => ({ ...e, [k]: '' })); };
@@ -1056,10 +1085,17 @@ const Checkout = () => {
                         <h2 className="text-lg font-black text-zinc-900 mb-6"
                             style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>Review Your Order</h2>
                         <ReviewStep
-                            shipping={shipping} payment={payment}
-                            cartEntries={cartEntries} subtotal={subtotal}
-                            shippingFee={shippingFee} discountAmt={discountAmt}
-                            total={total} promoCode={promoCode} discount={discount}
+                            shipping={shipping}
+                            payment={payment}
+                            cartEntries={cartEntries}
+                            subtotal={subtotal}
+                            taxAmount={taxAmount} // ← Naya prop add kiya
+                            taxRate={taxRate} // ← Naya prop add kiya
+                            shippingFee={shippingFee}
+                            discountAmt={discountAmt}
+                            total={total}
+                            promoCode={promoCode}
+                            discount={discount}
                         />
                     </>
                 )}
@@ -1109,4 +1145,4 @@ const Checkout = () => {
     );
 };
 
-export default Checkout;
+export default Checkout; 

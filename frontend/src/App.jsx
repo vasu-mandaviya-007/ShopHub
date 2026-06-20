@@ -25,6 +25,7 @@ import OrderSuccess from './pages/OrderSuccess';
 import men_banner from './assets/mens_banner.png'
 import women_banner from './assets/women_banner.png'
 import kids_banner from './assets/kids_banner.jpg'
+import AddressBook from './pages/AddressBook';
 
 
 
@@ -58,6 +59,7 @@ function App() {
                     <Route path='/checkout' element={<Checkout />} />
                     <Route path='/order-success' element={<OrderSuccess />} />
                     <Route path="/account" element={<Account />} />
+                    <Route path="/address" element={<AddressBook />} />
 
                 </Routes>
                 <Footer />

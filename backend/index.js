@@ -5,13 +5,15 @@ import getConnection from "./utils/getConnection.js";
 
 // Models
 import Users from "./models/Users.js";
-import Cart from "./models/Cart.js";
+import Cart from "./models/Cart.js"; 
 
 // Routers
 import ProductRouter from "./routes/ProductRouter.js";
 import OrderRouter from "./routes/OrderRouter.js";
+import OrderRouter2 from "./routes/OrderRouter2.js";
 import AccountRouter from "./routes/AccountRouter.js";
 import CartRouter from "./routes/CartRouter.js";
+import dashboardRouter from "./routes/DashboardRouter.js";
 
 // Controllers
 import Register from "./controllers/Register.js";
@@ -20,6 +22,7 @@ import ForgetPass from "./controllers/ForgetPass.js";
 import VerifyOtp from "./controllers/VerifyOtp.js";
 import GetOtpTimer from "./controllers/GetOtpTimer.js";
 import UpdatePass from "./controllers/UpdatePass.js";
+// import connectCloudinary from "./config/cloudinary.js";
 
 // Initialization
 const app = express();
@@ -29,7 +32,11 @@ const allowedOrigins = process.env.CLIENT_URL
     ? process.env.CLIENT_URL.split(',')
     : [];
 
+
+// await connectCloudinary();
+
 // ===================================> MIDDLEWARES <=================================== //
+
 app.use(
     cors({
         // Production me hamesha .env variables use karna best hota he
@@ -47,7 +54,7 @@ getConnection();
 // ===================================> HEALTH CHECK ROUTE <=================================== //
 app.get("/", async (req, res) => {
     try {
-        // your code logic
+        // your code logic 
         res.json("Success");
     } catch (error) {
         console.error("Error:", error);
@@ -56,18 +63,33 @@ app.get("/", async (req, res) => {
 });
 
 // ===================================> USER AUTHENTICATION APIS <=================================== //
+import adminAuthRouter from './routes/AdminAuthRouter.js';
+import adminSettingsRouter from './routes/AdminSettingsRouter.js';
+
+
+// Baaki code ke sath isko mount kar do
+app.use('/admin', adminSettingsRouter);
+
+
+app.use('/admin/auth', adminAuthRouter); 
+
+// ... baaki middlewares aur routes
+
+
 app.post("/signup", Register);
 app.post("/login", Login);
 app.post("/forgetpass", ForgetPass);
-app.post("/verify", VerifyOtp);
+app.post("/verify", VerifyOtp); 
 app.post("/GetOtpTimer", GetOtpTimer);
 app.post("/UpdatePass", UpdatePass);
 
 // ===================================> MODULE ROUTERS <=================================== //
 app.use("/products", ProductRouter);
 app.use("/orders", OrderRouter);
+app.use("/orders2", OrderRouter2);
 app.use("/account", AccountRouter);
 app.use("/cart", CartRouter);
+app.use('/dashboard', dashboardRouter)
 
 // ===================================> ADMIN APIS <=================================== //
 app.post("/adminremove", async (req, res) => {

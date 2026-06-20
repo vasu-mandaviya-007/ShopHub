@@ -1,11 +1,86 @@
+// import React, { useContext } from 'react';
+// import CartItem from '../components/CartItems/CartItem';
+
+// import '../components/CartItems/CartItem.css';
+// import { ShopContext } from '../context/ShopContext.jsx';
+// import { Link } from 'react-router-dom';
+// import Loader from '../components/Loader/Loader.jsx';
+
+
+// const Cart = () => {
+
+//      const { RemoveFromCart, isloading, all_product, cartItem } = useContext(ShopContext);
+
+//      if (isloading) {
+//           return <Loader />
+//      }
+
+
+//      return (
+//           <div className='cartitems'>
+//                <div className="cartitems-format-main">
+//                     <p>Products</p>
+//                     <p>Title</p>
+//                     <p>Price</p>
+//                     <p>Quantity</p>
+//                     <p>Total</p>
+//                     <p>Remove</p>
+//                </div>
+//                <hr />
+
+//                {all_product.map((e, i) => {
+//                     const item = cartItem.find(p => Number(p.productId) === e.id);
+//                     if (item) {
+//                          return (
+//                               <CartItem key={i} product={e} cartItem={item} removeFromCart={RemoveFromCart} />
+//                          );
+//                     }
+//                     return null;
+//                })}
+
+//                <div className="cartitems-down">
+//                     <div className="cartitems-total">
+//                          <h1>Cart Total</h1>
+//                          <div>
+//                               <div className="cartitems-total-item">
+//                                    <p>Subtotal</p>
+//                               </div>
+//                               <hr />
+//                               <div className="cartitems-total-item">
+//                                    <p>Shipping Fee</p>
+//                                    <p>Free</p>
+//                               </div>
+//                               <hr />
+//                               <div className="cartitems-total-item">
+//                                    <h3>Total</h3>
+//                               </div>
+//                          </div>
+//                          <button>PROCEED TO CHECKOUT</button>
+//                     </div>
+//                     <div className="cartitems-promocode">
+//                          <p>If you have a promo code, Enter it here</p>
+//                          <div className="cartitems-promobox">
+//                               <input type="text" placeholder='Promo Code' />
+//                               <button>Submit</button>
+//                          </div>
+//                     </div>
+//                </div>
+//           </div>
+//      );
+// }
+
+// export default Cart;
+
+
 import React, { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext.jsx';
 import CartItem from '../components/CartItem.jsx';
 
+const SHIPPING_THRESHOLD = 999; // free shipping above this
+
 const Cart = () => {
-     // 1. IMPORT storeSettings from Context
-     const { RemoveFromCart, UpdateCartQuantity, isloading, all_product = [], cartItem, storeSettings } = useContext(ShopContext);
+     const { RemoveFromCart, UpdateCartQuantity, isloading, all_product = [], cartItem } = useContext(ShopContext);
      const Navigate = useNavigate();
 
      const [promoCode, setPromoCode] = useState('');
@@ -19,26 +94,11 @@ const Cart = () => {
           return item ? { product, cartItem: item } : null;
      }).filter(Boolean);
 
-     // 2. DYNAMIC SETTINGS FROM ADMIN PANEL
-     const shippingThreshold = Number(storeSettings?.freeShipAmt) || 999;
-     const taxRate = Number(storeSettings?.taxRate) || 0;
-     const minOrderAmt = Number(storeSettings?.minOrderAmt) || 0;
-
-     // Calculations
      const subtotal = cartEntries.reduce((sum, { product, cartItem }) => sum + product.new_price * cartItem.quantity, 0);
      const totalItems = cartEntries.reduce((sum, { cartItem }) => sum + cartItem.quantity, 0);
-
+     const shippingFee = subtotal >= SHIPPING_THRESHOLD ? 0 : 99;
      const discountAmt = Math.floor(subtotal * discount);
-     const discountedSubtotal = subtotal - discountAmt; // Tax aur shipping discount ke baad lagna chahiye
-
-     // Dynamic Tax & Shipping
-     const taxAmount = Math.floor((discountedSubtotal * taxRate) / 100);
-     const shippingFee = discountedSubtotal >= shippingThreshold ? 0 : 99;
-
-     const total = discountedSubtotal + taxAmount + shippingFee;
-
-     // Minimum Order Check
-     const isMinOrderMet = subtotal >= minOrderAmt;
+     const total = subtotal - discountAmt + shippingFee;
 
      const PROMO_CODES = { 'SAVE10': 0.10, 'SAVE20': 0.20, 'SHOPEASE': 0.15 };
 
@@ -150,42 +210,24 @@ const Cart = () => {
                               ))}
                          </div>
 
-                         {/* Free shipping progress bar (Dynamic based on settings) */}
-                         {/* {discountedSubtotal < shippingThreshold && (
+                         {/* Free shipping progress bar */}
+                         {subtotal < SHIPPING_THRESHOLD && (
                               <div className="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-100">
                                    <div className="flex justify-between text-xs font-medium text-amber-700 mb-2">
                                         <span>
-                                             Add <span className="font-bold">₹{(shippingThreshold - discountedSubtotal).toLocaleString('en-IN')}</span> more for free shipping!
+                                             Add <span className="font-bold">₹{(SHIPPING_THRESHOLD - subtotal).toLocaleString('en-IN')}</span> more for free shipping!
                                         </span>
-                                        <span>{Math.round((discountedSubtotal / shippingThreshold) * 100)}%</span>
+                                        <span>{Math.round((subtotal / SHIPPING_THRESHOLD) * 100)}%</span>
                                    </div>
                                    <div className="h-1.5 bg-amber-200 rounded-full overflow-hidden">
                                         <div
                                              className="h-full bg-amber-500 rounded-full transition-all duration-500"
-                                             style={{ width: `${Math.min((discountedSubtotal / shippingThreshold) * 100, 100)}%` }}
-                                        />
-                                   </div>
-                              </div>
-                         )} */}
-
-                         {discountedSubtotal < shippingThreshold && (
-                              <div className="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-100">
-                                   <div className="flex justify-between text-xs font-medium text-amber-700 mb-2">
-                                        <span>
-                                             Add <span className="font-bold">₹{(shippingThreshold - discountedSubtotal).toLocaleString('en-IN')}</span> more for free shipping!
-                                        </span>
-                                        <span>{Math.floor((discountedSubtotal / shippingThreshold) * 100)}%</span>
-                                   </div>
-                                   <div className="h-1.5 bg-amber-200 rounded-full overflow-hidden">
-                                        <div
-                                             className="h-full bg-amber-500 rounded-full transition-all duration-500"
-                                             style={{ width: `${Math.floor((discountedSubtotal / shippingThreshold) * 100)}%` }}
+                                             style={{ width: `${Math.min((subtotal / SHIPPING_THRESHOLD) * 100, 100)}%` }}
                                         />
                                    </div>
                               </div>
                          )}
-
-                         {discountedSubtotal >= shippingThreshold && (
+                         {subtotal >= SHIPPING_THRESHOLD && (
                               <div className="mt-6 p-4 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center gap-2">
                                    <i className="fa-solid fa-truck-fast text-emerald-500" />
                                    <p className="text-emerald-700 text-xs font-medium">
@@ -215,14 +257,6 @@ const Cart = () => {
                                         <div className="flex justify-between text-emerald-600">
                                              <span>Promo ({promoCode.toUpperCase()})</span>
                                              <span className="font-semibold">−₹{discountAmt.toLocaleString('en-IN')}</span>
-                                        </div>
-                                   )}
-
-                                   {/* Dynamic Tax Line */}
-                                   {taxAmount > 0 && (
-                                        <div className="flex justify-between text-zinc-600">
-                                             <span>Tax ({taxRate}%)</span>
-                                             <span className="font-semibold text-zinc-800">₹{taxAmount.toLocaleString('en-IN')}</span>
                                         </div>
                                    )}
 
@@ -282,27 +316,14 @@ const Cart = () => {
                                    )}
                               </div>
 
-                              {/* Checkout CTA with Dynamic Minimum Order Validation */}
+                              {/* Checkout CTA */}
                               <button
                                    onClick={() => Navigate('/checkout')}
-                                   disabled={!isMinOrderMet}
-                                   className={`w-full mt-6 py-4 rounded-xl text-white text-sm font-bold tracking-wide transition-all duration-300 flex items-center justify-center gap-2 
-                                   ${!isMinOrderMet
-                                             ? 'bg-zinc-400 cursor-not-allowed'
-                                             : 'bg-linear-to-r from-blue-500 to-cyan-400 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-[1.02] active:scale-95'}`}
+                                   className="w-full mt-6 py-4 bg-linear-to-r from-blue-500 to-cyan-400 text-white text-sm font-bold tracking-wide rounded-xl hover:shadow-xl hover:shadow-blue-500/30 hover:scale-[1.02] transition-all duration-300 active:scale-95 flex items-center justify-center gap-2"
                               >
-                                   {!isMinOrderMet ? (
-                                        <>
-                                             <i className="fa-solid fa-circle-exclamation text-xs" />
-                                             Minimum Order: ₹{minOrderAmt.toLocaleString('en-IN')}
-                                        </>
-                                   ) : (
-                                        <>
-                                             <i className="fa-solid fa-lock text-xs" />
-                                             Proceed to Checkout
-                                             <span className="ml-1 text-white/80">· ₹{total.toLocaleString('en-IN')}</span>
-                                        </>
-                                   )}
+                                   <i className="fa-solid fa-lock text-xs" />
+                                   Proceed to Checkout
+                                   <span className="ml-1 text-white/80">· ₹{total.toLocaleString('en-IN')}</span>
                               </button>
 
                               {/* Trust note */}

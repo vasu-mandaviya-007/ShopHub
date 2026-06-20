@@ -5,7 +5,7 @@ const localpath = import.meta.env.VITE_API_URL;
 
 const api_paths = {
 
-     register: `${localpath}/signup`,
+     register: `${localpath}/signup`, 
      login: `${localpath}/login`,
      forgetpass: `${localpath}/forgetpass`,
      otpverify: `${localpath}/verify`,
@@ -23,6 +23,7 @@ const api_paths = {
      myOrders : `${localpath}/orders/myorders`,
      accountUpdate : `${localpath}/account/update`,
      changePassword : `${localpath}/account/changepassword`,
+     store_settings : `${localpath}/admin/public/store-settings`,
 
 }
 

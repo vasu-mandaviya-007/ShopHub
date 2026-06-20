@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './ListProduct.css';
+// import './ListProduct.css';
 import api_paths from '../../config/apis';
 // import Swal from 'sweetalert2';
 

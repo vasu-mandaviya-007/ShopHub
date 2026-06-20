@@ -29,7 +29,7 @@ body {
 }
 
 
-form {
+.select-box form {
   position: relative;
   /* top: 0; */
   /* right: 0; */
@@ -159,7 +159,7 @@ form {
 }
 
 
-input[type="radio"] {
+.select-box input[type="radio"] {
   position: absolute;
   right: 0;
   left: 0;

@@ -1,9 +1,9 @@
 import React from 'react';
-import './SelectBox.css';
+// import './SelectBox.css';
 
 const SelectBox = () => {
      return (
-          <div>
+          <div className='select-box'>
 
                <form>
                     <input type="checkbox" id="options-checkbox-btn" />

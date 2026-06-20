@@ -1,7 +1,9 @@
 import Product from '../models/Product.js';
 
 const addproduct = async (req, res) => {
+
      try {
+
           let products = await Product.find({});
           let id = products.length > 0 ? products[products.length - 1].id + 1 : 1;
 
@@ -33,11 +35,20 @@ const remove_product = async (req, res) => {
 
 const allproducts = async (req, res) => {
      try {
-          let products = await Product.find({});
-          res.status(200).json(products);
+          // const products = await Product.find({ available: true });
+          const products = await Product.find().sort({ id: 1 });
+
+          res.status(200).json({
+               success: true,
+               products
+          });
      } catch (error) {
-          console.error('allproducts error:', error);
-          res.status(500).json({ success: false, error: 'Server error' });
+          console.error("allproducts error:", error);
+
+          res.status(500).json({
+               success: false,
+               error: "Server error"
+          });
      }
 };
 

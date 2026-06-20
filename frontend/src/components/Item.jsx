@@ -27,12 +27,16 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ShopContext } from '../context/ShopContext';
 
 const Item = ({ id, name, image, new_price, old_price }) => {
+
      const [imgLoaded, setImgLoaded] = useState(false);
      const discount = Math.floor(100 - (new_price * 100) / old_price);
+
+     const { formatCurrency } = useContext(ShopContext);
 
      return (
           <Link
@@ -80,10 +84,12 @@ const Item = ({ id, name, image, new_price, old_price }) => {
                     {/* Prices */}
                     <div className="flex items-baseline gap-2 flex-wrap mt-0.5">
                          <span className="text-[15px] font-bold text-zinc-900">
-                              ₹{new_price?.toLocaleString('en-IN')}
+                              {/* ₹{new_price?.toLocaleString('en-IN')} */}
+                              {formatCurrency(new_price)}
                          </span>
                          <span className="text-[12px] text-zinc-400 line-through">
-                              ₹{old_price?.toLocaleString('en-IN')}
+                              {/* ₹{old_price?.toLocaleString('en-IN')} */}
+                              {formatCurrency(old_price)}
                          </span>
                          <span className="text-[11px] font-semibold text-emerald-600 ml-auto">
                               {discount}% off

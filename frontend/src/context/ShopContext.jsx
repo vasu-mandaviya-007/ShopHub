@@ -419,6 +419,194 @@
 
 
 
+// import React, { createContext, useState, useEffect, useCallback } from "react";
+// import { toast } from "react-toastify";
+// import Swal from "sweetalert2";
+// import api_paths from "../config/apis";
+
+// export const ShopContext = createContext(null);
+
+// const ShopContextProvider = ({ children }) => {
+
+//      const [all_product, setAllProduct] = useState([]);
+//      const [cartItem, setCartItem] = useState([]);
+//      const [user, setUser] = useState(null);   // ← user profile
+//      const [isloading, setIsLoading] = useState(true);
+
+//      /* ── Auth headers ── */
+//      const authHeaders = () => ({
+//           Accept: "application/json",
+//           "Content-Type": "application/json",
+//           "auth-token": localStorage.getItem("auth-token") || "",
+//      });
+
+//      const requireAuth = (action = "do that") => {
+//           Swal.fire({
+//                title: "Login Required",
+//                text: `Please login to ${action}.`,
+//                icon: "warning",
+//                confirmButtonText: "Login",
+//                showCancelButton: true,
+//                confirmButtonColor: "#f43f5e",
+//           }).then(({ isConfirmed }) => {
+//                if (isConfirmed) window.location.replace("#/login");
+//           });
+//      };
+
+//      /* ── Fetch all products ── */
+//      const getAllProduct = useCallback(async () => {
+//           try {
+//                const res = await fetch(api_paths.all_products);
+//                const data = await res.json();
+//                setAllProduct(data.products);
+//           } catch (err) {
+//                console.error("getAllProduct:", err);
+//           }
+//      }, []);
+
+//      /* ── Fetch user profile ── */
+//      const getUserProfile = useCallback(async () => {
+//           try {
+//                const res = await fetch(api_paths.profile, {
+//                     headers: authHeaders(),
+//                });
+//                const data = await res.json();
+//                if (data.success) setUser(data.user);
+//           } catch (err) {
+//                console.error("getUserProfile:", err);
+//           }
+//      }, []);
+
+//      /* ── Fetch cart ── */
+//      const getCartProduct = useCallback(async () => {
+//           try {
+//                const res = await fetch(api_paths.getcartitem, {
+//                     method: "POST",
+//                     headers: authHeaders(),
+//                     body: "",
+//                });
+//                const data = await res.json();
+//                setCartItem(Array.isArray(data) ? data : []);
+//           } catch (err) {
+//                console.error("getCartProduct:", err);
+//           }
+//      }, []);
+
+//      /* ── Bootstrap ── */
+//      useEffect(() => {
+//           const init = async () => {
+//                setIsLoading(true);
+//                await getAllProduct();
+//                if (localStorage.getItem("auth-token")) {
+//                     await Promise.all([getCartProduct(), getUserProfile()]);
+//                }
+//                setIsLoading(false);
+//           };
+//           init();
+//      }, [getAllProduct, getCartProduct, getUserProfile]);
+
+//      /* ── addToCart ── */
+//      const addToCart = async (itemId) => {
+//           if (!localStorage.getItem("auth-token")) {
+//                requireAuth("add items to cart");
+//                return;
+//           }
+//           setCartItem(prev => {
+//                const existing = prev.find(i => Number(i.productId) === itemId);
+//                return existing
+//                     ? prev.map(i => Number(i.productId) === itemId ? { ...i, quantity: i.quantity + 1 } : i)
+//                     : [...prev, { productId: itemId, quantity: 1 }];
+//           });
+//           try {
+//                const res = await fetch(api_paths.addtocart, {
+//                     method: "POST", headers: authHeaders(), body: JSON.stringify({ itemId }),
+//                });
+//                const data = await res.json();
+//                if (data.success !== false) {
+//                     toast.success("Added to cart", { position: "bottom-center", autoClose: 2000, theme: "dark" });
+//                } else {
+//                     await getCartProduct();
+//                     toast.error("Couldn't add item. Please try again.");
+//                }
+//           } catch {
+//                await getCartProduct();
+//                toast.error("Network error. Please try again.");
+//           }
+//      };
+
+//      /* ── RemoveFromCart ── */
+//      const RemoveFromCart = async (itemId) => {
+//           if (!localStorage.getItem("auth-token")) { requireAuth("remove items"); return; }
+//           setCartItem(prev => prev.filter(i => Number(i.productId) !== itemId));
+//           try {
+//                const res = await fetch(api_paths.removefromcart, {
+//                     method: "POST", headers: authHeaders(), body: JSON.stringify({ itemId }),
+//                });
+//                const data = await res.json();
+//                if (data.success === false) await getCartProduct();
+//                else toast.info("Item removed", { position: "bottom-center", autoClose: 1500, theme: "light" });
+//           } catch {
+//                await getCartProduct();
+//           }
+//      };
+
+//      /* ── UpdateCartQuantity ── */
+//      const UpdateCartQuantity = async (itemId, qty) => {
+//           if (!localStorage.getItem("auth-token")) { requireAuth("update cart"); return; }
+//           if (qty < 1) { await RemoveFromCart(itemId); return; }
+
+//           const existingItem = cartItem.find(i => Number(i.productId) === itemId);
+//           const oldQty = existingItem?.quantity ?? 0;
+//           const diff = qty - oldQty;
+//           if (diff === 0) return;
+
+//           setCartItem(prev =>
+//                prev.map(i => Number(i.productId) === itemId ? { ...i, quantity: qty } : i)
+//           );
+//           const endpoint = diff > 0 ? api_paths.addtocart : api_paths.removefromcart;
+//           try {
+//                for (let s = 0; s < Math.abs(diff); s++) {
+//                     await fetch(endpoint, { method: "POST", headers: authHeaders(), body: JSON.stringify({ itemId }) });
+//                }
+//           } catch {
+//                await getCartProduct();
+//           }
+//      };
+
+//      /* ── Helpers ── */
+//      const getTotalCartItems = () => cartItem.reduce((sum, i) => sum + (i.quantity ?? 0), 0);
+//      const getTotalCartAmount = () => cartItem.reduce((sum, ci) => {
+//           const product = all_product.find(p => p.id === Number(ci.productId));
+//           return product ? sum + product.new_price * ci.quantity : sum;
+//      }, 0);
+
+//      const contextValue = {
+//           all_product,
+//           cartItem,
+//           user,           // ← exposed for Navbar + Account page
+//           setUser,        // ← Account page updates it after profile save
+//           isloading,
+//           addToCart,
+//           RemoveFromCart,
+//           UpdateCartQuantity,
+//           getTotalCartItems,
+//           getTotalCartAmount,
+//           getCartProduct,
+//           getUserProfile,
+//      };
+
+//      return (
+//           <ShopContext.Provider value={contextValue}>
+//                {isloading ? <></> : children}
+//           </ShopContext.Provider>
+//      );
+// };
+
+// export default ShopContextProvider;
+
+
+
+
 import React, { createContext, useState, useEffect, useCallback } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
@@ -430,8 +618,11 @@ const ShopContextProvider = ({ children }) => {
 
      const [all_product, setAllProduct] = useState([]);
      const [cartItem, setCartItem] = useState([]);
-     const [user, setUser] = useState(null);   // ← user profile
+     const [user, setUser] = useState(null);
      const [isloading, setIsLoading] = useState(true);
+
+     // ── NAYA STATE: Global Store Settings ──
+     const [storeSettings, setStoreSettings] = useState(null);
 
      /* ── Auth headers ── */
      const authHeaders = () => ({
@@ -447,7 +638,7 @@ const ShopContextProvider = ({ children }) => {
                icon: "warning",
                confirmButtonText: "Login",
                showCancelButton: true,
-               confirmButtonColor: "#f43f5e",
+               confirmButtonColor: "#f43f5e", // Tum chaho toh isko apne theme color (e.g., #f43f5e) rakh sakte ho
           }).then(({ isConfirmed }) => {
                if (isConfirmed) window.location.replace("#/login");
           });
@@ -458,9 +649,24 @@ const ShopContextProvider = ({ children }) => {
           try {
                const res = await fetch(api_paths.all_products);
                const data = await res.json();
-               setAllProduct(data);
+               setAllProduct(data.products);
           } catch (err) {
                console.error("getAllProduct:", err);
+          }
+     }, []);
+
+     /* ── NAYA FUNCTION: Fetch Store Settings ── */
+     // Note: Make sure api_paths.store_settings exists in your config
+     const getStoreSettings = useCallback(async () => {
+          try {
+               const res = await fetch(api_paths.store_settings);
+               const data = await res.json();
+               console.log(data)
+               if (data.success && data.store) {
+                    setStoreSettings(data.store);
+               }
+          } catch (err) {
+               console.error("getStoreSettings:", err);
           }
      }, []);
 
@@ -496,14 +702,16 @@ const ShopContextProvider = ({ children }) => {
      useEffect(() => {
           const init = async () => {
                setIsLoading(true);
-               await getAllProduct();
+               // ── FIX: Products ke sath Settings bhi fetch hongi ──
+               await Promise.all([getAllProduct(), getStoreSettings()]);
+
                if (localStorage.getItem("auth-token")) {
                     await Promise.all([getCartProduct(), getUserProfile()]);
                }
                setIsLoading(false);
           };
           init();
-     }, [getAllProduct, getCartProduct, getUserProfile]);
+     }, [getAllProduct, getStoreSettings, getCartProduct, getUserProfile]);
 
      /* ── addToCart ── */
      const addToCart = async (itemId) => {
@@ -573,31 +781,87 @@ const ShopContextProvider = ({ children }) => {
           }
      };
 
-     /* ── Helpers ── */
+     /* ══════════════════════════════════════════════════════════════════
+        💸 FINANCIAL HELPERS (Powered by Store Settings)
+     ══════════════════════════════════════════════════════════════════ */
+
      const getTotalCartItems = () => cartItem.reduce((sum, i) => sum + (i.quantity ?? 0), 0);
+
+     // 1. SUBTOTAL (Sirf products ka total price)
      const getTotalCartAmount = () => cartItem.reduce((sum, ci) => {
           const product = all_product.find(p => p.id === Number(ci.productId));
           return product ? sum + product.new_price * ci.quantity : sum;
      }, 0);
 
+     // 2. TAX AMOUNT (Subtotal pe kitna GST/Tax laga)
+     const getTaxAmount = () => {
+          const subtotal = getTotalCartAmount();
+          const taxRate = Number(storeSettings?.taxRate) || 0;
+          return (subtotal * taxRate) / 100;
+     };
+
+     // 3. SHIPPING FEE (Free shipping amount cross kiya ya nahi?)
+     const getShippingFee = () => {
+          const subtotal = getTotalCartAmount();
+          if (subtotal === 0) return 0; // Agar cart khali hai toh shipping 0
+
+          const freeShipTarget = Number(storeSettings?.freeShipAmt) || 999;
+          const defaultShippingCost = 50; // Standard Delivery Charge (Tum isko bhi baad me DB me dal sakte ho)
+
+          return subtotal >= freeShipTarget ? 0 : defaultShippingCost;
+     };
+
+     // 4. FINAL TOTAL (Subtotal + Tax + Shipping)
+     const getFinalTotal = () => {
+          return getTotalCartAmount() + getTaxAmount() + getShippingFee();
+     };
+
+     const formatCurrency = (amount) => {
+          let finalAmount = amount;
+          const currency = storeSettings?.currency || 'INR';
+
+          // Agar currency USD hai, toh amount ko convert karo (e.g., 83 se divide)
+          if (currency === 'USD') {
+               finalAmount = amount / (storeSettings?.exchangeRate || 83);
+          }
+
+          return new Intl.NumberFormat('en-US', { // locale bhi dynamic ho sakta hai
+               style: 'currency',
+               currency: currency,
+          }).format(finalAmount);
+     };
+
+     /* ══════════════════════════════════════════════════════════════════ */
+
      const contextValue = {
           all_product,
           cartItem,
-          user,           // ← exposed for Navbar + Account page
-          setUser,        // ← Account page updates it after profile save
+          user,
+          setUser,
           isloading,
+
+          storeSettings, // ← Naya: Cart page aur Checkout page iska use karenge
+
           addToCart,
           RemoveFromCart,
           UpdateCartQuantity,
+
           getTotalCartItems,
-          getTotalCartAmount,
+          getTotalCartAmount, // Subtotal
+          getTaxAmount,       // Naya
+          getShippingFee,     // Naya
+          getFinalTotal,      // Naya
+
           getCartProduct,
           getUserProfile,
+
+          formatCurrency
      };
 
      return (
           <ShopContext.Provider value={contextValue}>
-               {children}
+               {/* Loader logic, can be customized */}
+               {isloading ? <div className="h-screen flex items-center justify-center">Loading...</div> : children}
           </ShopContext.Provider>
      );
 };

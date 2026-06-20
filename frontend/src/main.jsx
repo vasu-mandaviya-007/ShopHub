@@ -5,23 +5,27 @@ import App from './App.jsx'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import ShopContextProvider from './context/ShopContext.jsx';
+import { StoreSettingsProvider } from './context/StoreSettingsContext.jsx';
 
 
 createRoot(document.getElementById('root')).render(
 
-  <ShopContextProvider>
-    <ToastContainer
-      position="top-center" 
-      autoClose={5000}
-      hideProgressBar={false}
-      newestOnTop={false}
-      closeOnClick
-      rtl={false}
-      pauseOnFocusLoss
-      draggable
-      pauseOnHover
-      theme="light"
-    />
-    <App />
-  </ShopContextProvider>
+  <StoreSettingsProvider>
+    <ShopContextProvider>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      <App />
+    </ShopContextProvider>
+  </StoreSettingsProvider>
+
 )

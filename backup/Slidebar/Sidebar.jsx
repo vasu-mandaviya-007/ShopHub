@@ -1,5 +1,5 @@
 import React from 'react';
-import './Sidebar.css';
+// import './Sidebar.css';
 import { Link } from 'react-router-dom';
 import add_product_icon from '../../image/cartIcon.png';
 import list_product_icon from '../../image/product_list_icon.png';
